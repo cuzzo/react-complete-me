@@ -4,21 +4,84 @@ define([
   "suggestion-list"
 ], function(React, SuggestionList) {
 
-var _SPACE_REGEX = /\s+/ig;
+var _KEY_UP = 38,
+    _KEY_DOWN = 40,
+    _KEY_BACKSPACE = 8,
+    _KEY_DELETE = 46,
+    _KEY_ENTER = 13;
 
 var ReactCompleteMe = {
   Components: {}
 };
 
-var Searchbar = React.createClass({
-  getInitialState: function() {
-    return {
-      q: ""
-    };
-  },
+/**
+ * Caches suggestions.
+ * TODO: threshold LRU.
+ */
+var SuggestionCache = function() {
+  var _cache = {};
+  var _last_cache = new Date();
 
-  /** Abstract keyboard stuff into a plain JS class. */
-  get_cursor_position: function($el) {
+  var _normalize_q = function(q) {
+    return q.toLowerCase();
+  }
+
+  this.lookup = function(q) {
+    return _cache[_normalize_q(q)];
+  };
+
+  this.add = function(q, resp) {
+    _cache[_normalize_q(q)] = resp;
+    _last_cache = new Date();
+  };
+
+  this.last_cache = function() {
+    return _last_cache;
+  };
+};
+
+/**
+ * "Watches" a textfield for keyboard input, pipes events userfriend-ily.
+ *
+ * @param object options
+ *  handle_up -> up key press event.
+ *  handle_down -> down key press event.
+ *  handle_backspace -> backspace key press event.
+ *  handle_delete -> delete key press event.
+ *  handle_enter -> enter key press event.
+ *  handle_text -> handle keys that can be interpreted as text.
+ *  handle_keyup -> handle keyup event (only fired for text).
+ */
+var TextfieldWatcher = function(options) {
+  options = typeof options === "object" ? options : {};
+
+  this.handle_keypress = function(ev) {
+    var code = ev.keyCode;
+    switch(code) {
+      case _KEY_UP: return options.handle_up();
+      case _KEY_DOWN: return options.handle_down(ev);
+      case _KEY_BACKSPACE: return options.handle_backspace(ev);
+      case _KEY_DELETE: return options.handle_delete(ev);
+      case _KEY_ENTER: return options.handle_enter(ev);
+    }
+    if (ev.which === 0) return;
+    options.handle_text(ev);
+  };
+
+  this.handle_keyup = function(ev) {
+    // For special keys, do nothing.
+    switch (ev.keyCode) {
+      case _KEY_UP:
+      case _KEY_DOWN:
+      case _KEY_BACKSPACE:
+      case _KEY_DELETE:
+      case _KEY_ENTER:
+        return;
+    }
+    options.handle_keyup(ev);
+  };
+
+  this.get_cursor_position = function($el) {
     if ($el.selectionStart) {
       return $el.selectionStart;
     }
@@ -38,116 +101,197 @@ var Searchbar = React.createClass({
       return rc.text.length;
     }
     return 0;
+  };
+
+  this.set_cursor_position_end = function($el) {
+    $el.setSelectionRange($el.value.length, $el.value.length);
+  };
+};
+
+/**
+ * QueryString manipulator.
+ */
+var QueryString = function(update_callback, q) {
+  var _q = q || "",
+       _SPACE_REGEX = /\s+/g;
+
+  this.remove_character = function(pos) {
+    if (pos > _q.length) return;
+    var new_q = _q.substring(0, pos) + _q.substring(pos + 1);
+    this.set(new_q);
   },
 
-  set_cursor_position_end: function($el) {
-    $el.setSelectionRange($el.value.length, $el.value.length);
+  this.insert_character = function(pos, char) {
+    // Set pos to end if greater than length.
+    pos = pos > _q.length ? _q.length : pos;
+    var new_q = _q.substring(0, pos) + char + _q.substring(pos + 1);
+    this.set(new_q);
+  },
+
+  this.set = function(q) {
+    if (q === _q) return false;
+    _q = q;
+    update_callback(q);
+  },
+
+  this.escape = function() {
+    return encodeURIComponent(_q.replace(_SPACE_REGEX, " "))
+        .replace(/%20/g, "+");
+  }
+};
+
+/**
+ * The Searchbar of the ReactCompleteMe auto-completer.
+ */
+var Searchbar = React.createClass({
+  _q: null,
+  _textfield_watcher: null,
+
+  getInitialState: function() {
+    this._q = new QueryString(this.props.update_callback);
+
+    this._textfield_watcher = new TextfieldWatcher({
+      handle_up: this.go_up_suggestion,
+      handle_down: this.go_down_suggestion,
+      handle_backspace: this.backspace,
+      handle_delete: this.delete,
+      handle_enter: this.submit,
+      handle_text: this.handle_keypress,
+      handle_keyup: this.handle_keyup
+    });
+
+    return null;
   },
 
   handle_keypress: function(ev) {
-    var code = ev.keyCode;
-    switch(code) {
-      case 38: return this.go_up_suggestion(); // up pressed.
-      case 40: return this.go_down_suggestion(); // down pressed.
-      case 8: return this.backspace(); // backspace pressed.
-      case 46: return this.delete(); // delete pressed.
-      case 13: return this.submit(); // submit pressed.
-    }
-    if (ev.which === 0) return;
     var next_char = String.fromCharCode(ev.which),
         $searchbar = this.refs.searchbar.getDOMNode(),
-        cursor_pos = this.get_cursor_position($searchbar);
-    this.insert_character_into_q(cursor_pos, next_char);
+        cursor_pos = this._textfield_watcher.get_cursor_position($searchbar);
+    this._q.insert_character(cursor_pos, next_char);
+  },
+
+  handle_keyup: function(ev) {
+    this._keyups_since_cache += 1;
+    this.set_q_to_current_input();
   },
 
   go_up_suggestion: function() {
     var $searchbar = this.refs.searchbar.getDOMNode();
-    this.refs.suggestion_list.go_up_suggestion();
-    $searchbar.value = this.refs.suggestion_list.get_suggested_text();
-    this.set_cursor_position_end($searchbar);
+    $searchbar.value = this.props.go_up_suggestion();
+    this._textfield_watcher.set_cursor_position_end($searchbar);
   },
 
   go_down_suggestion: function() {
     var $searchbar = this.refs.searchbar.getDOMNode();
-    this.refs.suggestion_list.go_down_suggestion();
-    $searchbar.value = this.refs.suggestion_list.get_suggested_text();
-    this.set_cursor_position_end($searchbar)
+    $searchbar.value = this.props.go_down_suggestion();
+    this._textfield_watcher.set_cursor_position_end($searchbar)
   },
 
   backspace: function() {
     var $searchbar = this.refs.searchbar.getDOMNode(),
-        cursor_pos = this.get_cursor_position($searchbar)
-    this.remove_character_from_q(cursor_pos - 1);
+        cursor_pos = this._textfield_watcher.get_cursor_position($searchbar)
+    this._q.remove_character(cursor_pos - 1);
   },
 
-  submit: function() {
-    console.log("SUBMIT");
+  submit: function(ev) {
+    var $searchbar = this.refs.searchbar.getDOMNode();
+    this.props.on_submit(ev, $searchbar.value);
   },
 
   delete: function() {
     var $searchbar = this.refs.searchbar.getDOMNode(),
         cursor_pos = this.get_cursor_position($searchbar);
-    this.remove_character_from_q(cursor_pos);
+    this._q.remove_character(cursor_pos);
   },
 
-  remove_character_from_q: function(pos) {
-    var q = this.state.q;
-    if (pos > q.length) return;
-    var new_q = q.substring(0, pos) + q.substring(pos + 1);
-    this.set_q(new_q);
-  },
-
-  insert_character_into_q: function(pos, char) {
-    var q = this.state.q;
-    // Set pos to end if greater than length.
-    pos = pos > q.length ? q.length : pos;
-    var new_q = q.substring(0, pos) + char + q.substring(pos + 1);
-    this.set_q(new_q);
-  },
-
-  set_q_to_current_input: function(ev) {
-    // For special keys, do nothing.
-    switch (ev.keyCode) {
-      case 38: // up pressed.
-      case 40: // down pressed.
-      case 8: // backspace pressed.
-      case 46: // delete pressed.
-      case 13: // submit pressed.
-        return;
-    }
+  set_q_to_current_input: function() {
     var $searchbar = this.refs.searchbar.getDOMNode();
-    this.set_q($searchbar.value);
+    this._q.set($searchbar.value);
   },
 
-  set_q: function(q) {
-    this.update_suggestions(q);
-    this.setState({q: q});
+  get_escaped_q: function() {
+    return this._q.escape();
   },
-  /** END ABSTRACT */
+
+  render: function() {
+    return (
+      <input
+            type="textfield"
+            name="q"
+            className="autosuggest-searchbar"
+            onKeyPress={this._textfield_watcher.handle_keypress}
+            onKeyUp={this._textfield_watcher.handle_keyup}
+            autoComplete="off"
+            ref="searchbar" />
+    );
+  }
+});
+
+/**
+ * The controller object for ReactCompleteMe auto-completion.
+ */
+var Completer = React.createClass({
+  _suggestion_cache: new SuggestionCache(),
+  _keyups_since_cache: 0,
+
+  cache: function(q, suggestions) {
+    this._suggestion_cache.add(q, suggestions);
+    this._keyups_since_cache = 0;
+  },
+
+  get_cache_state: function() {
+    var count = this.refs.suggestion_list.get_filtered_suggestions().length;
+    return {
+      miliseconds_elapsed: new Date() - this._suggestion_cache.last_cache(),
+      keyups_since_cache: this._keyups_since_cache,
+      suggestions: count,
+    };
+  },
 
   update_suggestions: function(q) {
-    var escaped_q = q.replace(_SPACE_REGEX, "+");
-    this.props.suggestion_fetcher(escaped_q, function(err, resp) {
+    this.refs.suggestion_list.set_filter(q);
+    if (this.props.Suggestion.keep_cache(q, this.get_cache_state())) return;
+    this.request_suggestions(q);
+  },
+
+  request_suggestions: function(q) {
+    var cached_resp = this._suggestion_cache.lookup(q);
+    if (cached_resp !== undefined) {
+      this.refs.suggestion_list.set_suggestions(cached_resp);
+      return;
+    }
+
+    var escaped_q = this.refs.searchbar.get_escaped_q();
+    this.props.Suggestion.GET(escaped_q, function(err, resp) {
       if (err) return console.error(err);
       this.refs.suggestion_list.set_suggestions(resp);
+      this.cache(q, resp);
     }.bind(this));
-    this.refs.suggestion_list.set_filter(q);
+  },
+
+  go_up_sugestion: function() {
+    var $suggestion_list = this.refs.suggestion_list;
+    $suggestion_list.go_up_suggestion();
+    return $suggestion_list.get_suggested_text();
+  },
+
+  go_down_suggestion: function() {
+    var $suggestion_list = this.refs.suggestion_list;
+    $suggestion_list.go_down_suggestion();
+    return $suggestion_list.get_suggested_text();
   },
 
   render: function() {
     return (
       <div className="autosuggest">
-        <input
-            type="textfield"
-            name="q"
-            className="autosuggest-searchbar"
-            onKeyPress={this.handle_keypress}
-            onKeyUp={this.set_q_to_current_input}
-            autoComplete="off"
+        <Searchbar
+            update_callback={this.update_suggestions}
+            go_up_suggestion={this.go_up_sugestion}
+            go_down_suggestion={this.go_down_suggestion}
             ref="searchbar" />
         <SuggestionList.Components.SuggestionList
-            suggestion_component={this.props.suggestion_component}
-            suggestion_filterer={this.props.suggestion_filterer}
+            suggestion_component={this.props.Suggestion.Components.Suggestion}
+            suggestion_filterer={this.props.Suggestion.suggestion_filterer}
             ref="suggestion_list" />
       </div>
     );
@@ -159,23 +303,14 @@ var Searchbar = React.createClass({
  *
  * @param Element $el
  *   A DOM element.
- * @param function fetcher
- *   A node-style function that queries ElasticSearch and returns the response.
- * @param ReactClass suggestion
- *   A suggestion component able to display ElasticSearch suggestion results.
- * @param Object cache
- *   The cache settings.
- *   TODO: List here.
- * @param function filterer
- *   A filter function to determine which suggestions to display (when cached).
+ * @param object Suggestion
+ *   An object implementing the Suggestion interface.
+ * @param function on_submit
+ *   A submit callback.
  */
-ReactCompleteMe.connect = function($el, fetcher, suggestion, cache, filterer) {
+ReactCompleteMe.connect = function($el, Suggestion, on_submit) {
   React.renderComponent(
-    <Searchbar
-        suggestion_fetcher={fetcher}
-        suggestion_component={suggestion}
-        cache_options={cache}
-        suggestion_filterer={filterer} />,
+    <Completer Suggestion={Suggestion} on_submit={on_submit} />,
     $el
   );
 };

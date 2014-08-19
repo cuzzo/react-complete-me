@@ -7,20 +7,23 @@ var SuggestionList = {
   Components: {}
 };
 
+/**
+ * The dropdown list of suggestions of the ReactCompleteMe auto-completer.
+ */
 SuggestionList.Components.SuggestionList = React.createClass({
   getInitialState: function() {
     return {
       suggestions: [],
-      filter: ""
+      filter: "" // synonymous with query string.
     };
   },
 
   go_up_suggestion: function() {
-    this.set_selection_rel(-1);
+    this._set_selection_rel(-1);
   },
 
   go_down_suggestion: function() {
-    this.set_selection_rel(1);
+    this._set_selection_rel(1);
   },
 
   set_filter: function(filter) {
@@ -31,7 +34,7 @@ SuggestionList.Components.SuggestionList = React.createClass({
     this.setState({suggestions: suggestions});
   },
 
-  set_selection_rel: function(rel_index) {
+  _set_selection_rel: function(rel_index) {
     var $selectbox = this.refs.selectbox.getDOMNode(),
         options = $selectbox.getElementsByTagName("option").length,
         new_index = $selectbox.selectedIndex + rel_index;
@@ -43,11 +46,11 @@ SuggestionList.Components.SuggestionList = React.createClass({
       new_index = 0;
     }
 
-    // Use state...
+    // Use state?
     $selectbox.selectedIndex = new_index;
   },
 
-  get_class_name: function(suggestions) {
+  _get_class_name: function(suggestions) {
     var class_name = "autosuggest-suggestions";
     if (suggestions.length === 0) {
       class_name += " autosuggest-hidden hidden";
@@ -68,8 +71,13 @@ SuggestionList.Components.SuggestionList = React.createClass({
     return typeof $option === "undefined" ? "" : $option.value;
   },
 
+  /**
+   * TODO: cache this so that suggestions are not filtered twice per render.
+   * Once to check for cache, and once in render...
+   * Suggestions should only change when set_filter() is called.
+   * Set something there, check here.
+   */
   get_filtered_suggestions: function() {
-    // TODO: keep track of if this is cached or not.
     return this.state.suggestions.filter(function(suggestion) {
       return this.props.suggestion_filterer(suggestion, this.state.filter);
     }.bind(this));
@@ -93,7 +101,7 @@ SuggestionList.Components.SuggestionList = React.createClass({
 
     return (
       <select
-          className={this.get_class_name($suggestions)}
+          className={this._get_class_name($suggestions)}
           size={$suggestions.length > 10 ? 10 : $suggestions.length}
           tabIndex="-1"
           ref="selectbox">

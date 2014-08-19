@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       compile: {
         options: _.extend(RJSConfig, {
           name: 'config',
-          out: 'dist/readdown.js',
+          out: 'dist/react-complete-me.js',
           baseUrl: './src',
           generateSourceMaps: true,
           optimize: 'uglify2',

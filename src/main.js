@@ -9,11 +9,10 @@ Main.main = function() {
     "suggestion",
     "react-complete-me"
   ], function(Sug, ReactCompleteMe) {
-    ReactCompleteMe.connect(document.getElementById("main-content"),
-        Sug.suggestion_fetcher,
-        Sug.Components.Suggestion,
-        {},
-        Sug.suggestion_filterer);
+    var $container = document.getElementById("main-content");
+    ReactCompleteMe.connect($container, Sug, function(ev, value) {
+      console.log("SUBMIT FROM MAIN!", ev, value);
+    });
   });
 };
 
