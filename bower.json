@@ -1,0 +1,29 @@
+{
+  "name": "react-complete-me",
+  "version": "0.0.1",
+  "homepage": "https://github.com/cuzzo/react-complete-me",
+  "authors": [
+    "Cuzzo Yahn <yahn007@outlook.com>"
+  ],
+  "description": "React autocompletion powered by ElasticSearch.",
+  "main": "main.js",
+  "keywords": [
+    "react",
+    "autocomplete",
+    "elasticsearch"
+  ],
+  "license": "BSD",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "dist"
+  ],
+  "dependencies": {
+    "react": "~0.10.0",
+    "requirejs": "~2.1.11",
+    "superagent": "~0.18.2"
+  }
+}

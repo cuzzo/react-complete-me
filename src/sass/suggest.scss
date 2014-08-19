@@ -1,0 +1,38 @@
+$light-grey: #7d878a;
+$searchbar-width: 33em;
+
+.autosuggest {
+  width: $searchbar-width;
+  overflow-x: hidden;
+  font-size: 1em;
+}
+
+.autosuggest-searchbar {
+  width: 100%;
+  font-size: 1em;
+  border: 1px solid $light-grey;
+}
+
+.autosuggest-searchbar:focus {
+  border: 1px solid Highlight;
+}
+
+.autosuggest-suggestions {
+  $selectbox-width: ($searchbar-width + 2em);
+
+  width: $selectbox-width;
+  font-size: 1em;
+  background-color: inherit;
+}
+
+.autosuggest-suggestions option[selected],
+.autosuggest-suggestions option:checked {
+  background-color: Highlight !important;
+}
+
+.autosuggest-hidden {
+  display: none;
+}
+.autosuggest-selected {
+  background-color: Highlight !important;
+}

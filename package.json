@@ -1,0 +1,25 @@
+{
+  "name": "react-complete-me",
+  "description": "React autocompletion powered by ElasticSearch.",
+  "version": "0.0.1",
+  "dependencies": {
+    "underscore": "~1.5.2"
+  },
+  "devDependencies": {
+    "bower": "~1.3.2",
+    "grunt": "~0.4.1",
+    "requirejs": "~2.1.4",
+    "grunt-cli": "~0.1.7",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-lib-phantomjs": "~0.3",
+    "grunt-mocha": "~0.4.7",
+    "grunt-react": "~0.9.0",
+    "http-server": "~0.6.1",
+    "grunt-contrib-sass": "~0.7.4"
+  },
+  "scripts": {
+    "postinstall": "bower install; grunt dist"
+  }
+}
