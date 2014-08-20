@@ -7,10 +7,10 @@ var Main = {};
 Main.main = function() {
   require([
     "suggestion",
-    "react-complete-me"
-  ], function(Sug, ReactCompleteMe) {
+    "completer"
+  ], function(Sug, Completer) {
     var $container = document.getElementById("main-content");
-    ReactCompleteMe.connect($container, Sug, function(ev, value) {
+    Completer.connect($container, Sug, function(ev, value) {
       console.log("SUBMIT FROM MAIN!", ev, value);
     });
   });

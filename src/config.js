@@ -11,9 +11,13 @@ var Config = {
     "superagent": LIB_BASE + "superagent/superagent",
 
     // src
+    "query-string": "app/query-string",
+    "textfield-watcher": "app/textfield-watcher",
+
     "suggestion": "app/components/suggestion",
+    "searchbar": "app/components/searchbar",
     "suggestion-list": "app/components/suggestion-list",
-    "react-complete-me": "app/components/react-complete-me"
+    "completer": "app/components/completer"
   }
 };
 
