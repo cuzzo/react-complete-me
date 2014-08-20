@@ -9,7 +9,7 @@ Main.main = function() {
     "suggestion",
     "completer"
   ], function(Sug, Completer) {
-    var $container = document.getElementById("main-content");
+    var $container = document.getElementById("react-complete-me");
     Completer.connect($container, Sug, function(ev, value) {
       console.log("SUBMIT FROM MAIN!", ev, value);
     });

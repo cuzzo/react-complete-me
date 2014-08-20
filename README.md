@@ -75,7 +75,7 @@ Pop `./dist/react-complete-me.js` onto a page somewhere (preferably link `./src/
 This default implementation of React Complete Me depends on an html element, preferably a div, on the page:
 
 ```html
-<div id="main-content"></div>
+<div id="react-complete-me"></div>
 ```
 
 Obviously, it's easy to change this.
