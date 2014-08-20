@@ -12,7 +12,7 @@
   }
   else if (typeof define === "function" && define.amd) define(deps, mod_def);
   else context[name] = definition();
-})("SuggestionCache", this,
+})("completer", this,
 function(React, Searchbar, SuggestionList, SuggestionCache) {
 
 /**
