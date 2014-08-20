@@ -98,7 +98,7 @@ The only publicly exposed function of React Complete Me is, in this repository, 
  * @param function on_submit
  *   A submit callback.
  */
-ReactCompleteMe.connect = function($el, Suggestion, on_submit) {
+Completer.connect = function($el, Suggestion, on_submit) {
   React.renderComponent(
     <Completer Suggestion={Suggestion} on_submit={on_submit} />,
     $el
