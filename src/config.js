@@ -13,6 +13,7 @@ var Config = {
     // src
     "query-string": "app/query-string",
     "textfield-watcher": "app/textfield-watcher",
+    "suggestion-cache": "app/suggestion-cache",
 
     "suggestion": "app/components/suggestion",
     "searchbar": "app/components/searchbar",

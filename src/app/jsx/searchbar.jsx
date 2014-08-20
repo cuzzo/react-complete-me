@@ -1,8 +1,9 @@
 /** @jsx React.DOM */
 define([
+  "react",
   "query-string",
   "textfield-watcher"
-], function(QueryString, TextfieldWatcher) {
+], function(React, QueryString, TextfieldWatcher) {
 
 /**
  * The Searchbar of the ReactCompleteMe auto-completer.

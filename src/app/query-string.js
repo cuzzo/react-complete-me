@@ -1,4 +1,4 @@
-defined([], function() {
+define([], function() {
 
 /**
  * QueryString manipulator.

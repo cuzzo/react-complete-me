@@ -2,8 +2,9 @@
 define([
   "react",
   "searchbar",
-  "suggestion-list"
-], function(React, Searchbar, SuggestionList) {
+  "suggestion-list",
+  "suggestion-cache"
+], function(React, Searchbar, SuggestionList, SuggestionCache) {
 
 /**
  * The controller object for ReactCompleteMe auto-completion.
