@@ -13,7 +13,6 @@
     "elasticsearch"
   ],
   "license": "BSD",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
