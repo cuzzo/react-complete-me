@@ -2,6 +2,7 @@
   "name": "react-complete-me",
   "description": "React autocompletion powered by ElasticSearch.",
   "version": "0.0.2",
+  "homepage": "https://github.com/cuzzo/react-complete-me",
   "dependencies": {
     "underscore": "~1.5.2"
   },
@@ -21,5 +22,15 @@
   },
   "scripts": {
     "postinstall": "bower install; grunt dist"
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "http://opensource.org/licences/BSD-2-Clause"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cuzzo/react-complete-me.git"
   }
 }
