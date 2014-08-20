@@ -105,5 +105,5 @@ module.exports = function(grunt) {
     grunt.config.set("mocha.browser", ["test/" + test_case + ".html"]);
     grunt.task.run("mocha");
   });
-  grunt.registerTask("dist", ["sass", "requirejs"]);
+  grunt.registerTask("dist", ["sass", "react", "requirejs"]);
 };
