@@ -85,7 +85,7 @@ Custom Features
 
 React Complete Me abstracts the hard part of autocompletion and allows you to easily put any fancy interface you want over top of it.
 
-The only publicly exposed function of React Complete Me is, in this repository, in `./src/main.js`. It is `ReactCompleteMe.conect()` (defined in `./src/app/jsx/react-complete-me.js`).
+The only publicly exposed function of React Complete Me is, in this repository, in `./src/main.js`. It is `Completer.conect()` (defined in `./src/app/jsx/completer.jsx`).
 
 ```jsx
 /**
