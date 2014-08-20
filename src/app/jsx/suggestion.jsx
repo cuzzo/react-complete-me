@@ -1,8 +1,16 @@
 /** @jsx React.DOM */
-define([
-  "react",
-  "superagent"
-], function(React, request) {
+(function(name, context, mod_def) {
+  var deps = [
+    "react",
+    "superagent"
+  ];
+  if (typeof module === "object" && moulde.exports) {
+    deps = deps.map(function(dep) { return require(dep); });
+    module.exports = mod_def.apply(deps);
+  }
+  else if (typeof define === "function" && define.amd) define(deps, mod_def);
+  else context[name] = definition();
+})("suggestion", this, function(React, Superagent) {
 
 var Suggestion = {
   Components: {}

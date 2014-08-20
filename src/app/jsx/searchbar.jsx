@@ -1,9 +1,17 @@
 /** @jsx React.DOM */
-define([
-  "react",
-  "query-string",
-  "textfield-watcher"
-], function(React, QueryString, TextfieldWatcher) {
+(function(name, context, mod_def) {
+  var deps = [
+    "react",
+    "query-string",
+    "textfield-watcher"
+  ];
+  if (typeof module === "object" && moulde.exports) {
+    deps = deps.map(function(dep) { return require(dep); });
+    module.exports = mod_def.apply(deps);
+  }
+  else if (typeof define === "function" && define.amd) define(deps, mod_def);
+  else context[name] = definition();
+})("searchbar", this, function(React, QueryString, TextfieldWatcher) {
 
 /**
  * The Searchbar of the ReactCompleteMe auto-completer.

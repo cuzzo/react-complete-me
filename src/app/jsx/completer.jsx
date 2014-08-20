@@ -1,10 +1,19 @@
 /** @jsx React.DOM */
-define([
-  "react",
-  "searchbar",
-  "suggestion-list",
-  "suggestion-cache"
-], function(React, Searchbar, SuggestionList, SuggestionCache) {
+(function(name, context, mod_def) {
+  var deps = [
+    "react",
+    "searchbar",
+    "suggestion-list",
+    "suggestion-cache"
+  ];
+  if (typeof module === "object" && moulde.exports) {
+    deps = deps.map(function(dep) { return require(dep); });
+    module.exports = mod_def.apply(deps);
+  }
+  else if (typeof define === "function" && define.amd) define(deps, mod_def);
+  else context[name] = definition();
+})("SuggestionCache", this,
+function(React, Searchbar, SuggestionList, SuggestionCache) {
 
 /**
  * The controller object for ReactCompleteMe auto-completion.

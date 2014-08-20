@@ -1,4 +1,8 @@
-define([], function() {
+(function(name, context, mod_def) {
+  if (typeof module === "object" && moulde.exports) module.exports = mod_def();
+  else if (typeof define === "function" && define.amd) define(mod_def);
+  else context[name] = definition();
+})("query-string", this, function() {
 
 /**
  * QueryString manipulator.
