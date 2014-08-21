@@ -1,5 +1,5 @@
 var _ = require('underscore')._;
-var RJSConfig = require('./src/config');
+var RJSConfig = require('./example/config');
 
 module.exports = function(grunt) {
   // Add require.js to the paths.
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: _.extend(RJSConfig, {
-          name: 'config',
+          name: '../example/config',
           out: 'dist/react-complete-me.js',
           baseUrl: './src',
           generateSourceMaps: true,
