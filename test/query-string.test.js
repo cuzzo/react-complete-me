@@ -11,7 +11,6 @@ describe("QueryString Unit Tests", function() {
   });
 
 
-  // Test that set triggers callback when changed, doesn't when the same.
   // Test that escape works.
 
   describe("Insert Tests", function() {
@@ -91,6 +90,32 @@ describe("QueryString Unit Tests", function() {
       sinon.stub(q, "set", function(){});
       q.remove_character(0, "");
       chai.assert.equal(q.set.callCount, 1);
+    });
+  });
+
+  describe("Set Tests", function() {
+    var cb_stub;
+
+    beforeEach(function() {
+      cb_stub = sinon.stub();
+    });
+
+    it("Should trigger for new string.", function() {
+      var q = new QueryString(cb_stub, "");
+      q.set("TEST");
+      chai.assert.equal(cb_stub.callCount, 1);
+    });
+
+    it("Should not trigger for current string.", function() {
+      var q = new QueryString(cb_stub, "TEST");
+      q.set("TEST");
+      chai.assert.equal(cb_stub.callCount, 0);
+    });
+
+    it("Should trigger for reset.", function() {
+      var q = new QueryString(cb_stub, "TEST");
+      q.set("");
+      chai.assert.equal(cb_stub.callCount, 1);
     });
   });
 });
