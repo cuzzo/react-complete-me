@@ -21,7 +21,8 @@
     "grunt-contrib-sass": "~0.7.4"
   },
   "scripts": {
-    "postinstall": "bower install; grunt dist"
+    "postinstall": "bower install; grunt dist",
+    "test": "grunt test"
   },
   "licenses": [
     {
