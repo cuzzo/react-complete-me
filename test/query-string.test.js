@@ -147,5 +147,25 @@ describe("QueryString Unit Tests", function() {
       var q = new QueryString(cb_stub, "My    Test");
       chai.assert.equal(q.escape(), "My+Test");
     });
+
+    it("Should trim beginning whitespace.", function() {
+      var q = new QueryString(cb_stub, " X");
+      chai.assert.equal(q.escape(), "X");
+    });
+
+    it("Should trim ending whitespace.", function() {
+      var q = new QueryString(cb_stub, "X ");
+      chai.assert.equal(q.escape(), "X");
+    });
+
+    it("Should trim beginning and ending whitespace.", function() {
+      var q = new QueryString(cb_stub, " X ");
+      chai.assert.equal(q.escape(), "X");
+    });
+
+    it("Should trim multiple whitespaces.", function() {
+      var q = new QueryString(cb_stub, "  X");
+      chai.assert.equal(q.escape(), "X");
+    });
   });
 });

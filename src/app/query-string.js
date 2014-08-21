@@ -64,7 +64,7 @@ var QueryString = function(update_callback, q) {
    *   The querystring, escaped--whitespace collapsed and replaced with "+".
    */
   this.escape = function() {
-    return encodeURIComponent(_q.replace(_SPACE_REGEX, " "))
+    return encodeURIComponent(_q.trim().replace(_SPACE_REGEX, " "))
         .replace(_ESCAPED_SPACE_REGEX, "+");
   };
 };
