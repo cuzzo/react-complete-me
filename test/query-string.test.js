@@ -10,9 +10,6 @@ describe("QueryString Unit Tests", function() {
     });
   });
 
-
-  // Test that escape works.
-
   describe("Insert Tests", function() {
     var cb_stub;
 
@@ -116,6 +113,39 @@ describe("QueryString Unit Tests", function() {
       var q = new QueryString(cb_stub, "TEST");
       q.set("");
       chai.assert.equal(cb_stub.callCount, 1);
+    });
+  });
+
+  describe("Escape Tests", function() {
+    var cb_stub;
+
+    beforeEach(function() {
+      cb_stub = sinon.stub();
+    });
+
+    it("Should be same for empty query string.", function() {
+      var q = new QueryString(cb_stub, "");
+      chai.assert.equal(q.escape(), "");
+    });
+
+    it("Should be same for query string without whitespace.", function() {
+      var q = new QueryString(cb_stub, "TEST");
+      chai.assert.equal(q.escape(), "TEST");
+    });
+
+    it("Should escape single whitespace with '+'.", function() {
+      var q = new QueryString(cb_stub, "My Test");
+      chai.assert.equal(q.escape(), "My+Test");
+    });
+
+    it("Should escape multiple single whitespaces with '+'.", function() {
+      var q = new QueryString(cb_stub, "My Test String");
+      chai.assert.equal(q.escape(), "My+Test+String");
+    });
+
+    it("Should escape repeating whitespace with single '+'.", function() {
+      var q = new QueryString(cb_stub, "My    Test");
+      chai.assert.equal(q.escape(), "My+Test");
     });
   });
 });
