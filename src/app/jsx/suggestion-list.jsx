@@ -83,6 +83,14 @@ SuggestionList.Components.SuggestionList = React.createClass({
     }.bind(this));
   },
 
+  fetch: function(escaped_q, cb) {
+    this.props.suggestions_fetch(escaped_q, function(err, resp) {
+      if (err) return cb(err);
+      this.set_suggestions(resp);
+      cb(null, resp);
+    }.bind(this));
+  },
+
   render: function() {
     var filtered_suggestions = this.get_filtered_suggestions(),
         selected = filtered_suggestions.length === 1,

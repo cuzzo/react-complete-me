@@ -29,21 +29,21 @@ var Completer = React.createClass({
 
   update_suggestions: function(q) {
     this.refs.suggestion_list.set_filter(q);
-    if (this.props.Suggestion.keep_cache(q, this.get_cache_state())) return;
-    this.request_suggestions(q);
-  },
 
-  request_suggestions: function(q) {
     var cached_resp = this._suggestion_cache.lookup(q);
     if (cached_resp !== undefined) {
       this.refs.suggestion_list.set_suggestions(cached_resp);
       return;
     }
 
+    if (this.props.Suggestion.keep_cache(q, this.get_cache_state())) return;
+    this.request_suggestions(q);
+  },
+
+  request_suggestions: function(q) {
     var escaped_q = this.refs.searchbar.get_escaped_q();
-    this.props.Suggestion.GET(escaped_q, function(err, resp) {
+    this.refs.suggestion_list.fetch(escaped_q, function(err, resp) {
       if (err) return console.error(err);
-      this.refs.suggestion_list.set_suggestions(resp);
       this.cache(q, resp);
     }.bind(this));
   },
@@ -71,6 +71,7 @@ var Completer = React.createClass({
         <SuggestionList.Components.SuggestionList
             suggestion_component={this.props.Suggestion.Components.Suggestion}
             suggestion_filterer={this.props.Suggestion.suggestion_filterer}
+            suggestions_fetch={this.props.Suggestion.GET}
             ref="suggestion_list" />
       </div>
     );
