@@ -6,9 +6,9 @@ React autocompletion powered by ElasticSearch. So easy your mom can do it.
 Usage
 -----
 
-React Complete Me is autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage") It's build with the idea of customization in mind, and is easy to integrate.
+React Complete Me is an autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage") It's build with the idea of customization in mind, and is easy to integrate.
 
-Why is this helpful? ElasticSearch is going to do autocomplete faster than nearly anything you've thought of, and it's so easy... your mom can use it.
+Why is this helpful? ElasticSearch autocompletes faster than nearly anything you've thought of, and it's so easy... your mom can use it.
 
 Dependencies
 ------------
@@ -19,7 +19,7 @@ Dependencies
 Prerequisite Knowledge
 ----------------------
 
-React Complete Me gets its name from the ElasticSearch blogpost [You Complete Me](http://www.elasticsearch.org/blog/you-complete-me/ "ElasticSearch Autocompletion Example"). This README assumes knowledge of ElasticSearch. If you don't have it, follow that guide, and you'll know everything you need to be ElasticSearch-competent in 20 minutes.
+React Complete Me gets its name from the ElasticSearch blogpost [You Complete Me](http://www.elasticsearch.org/blog/you-complete-me/ "ElasticSearch Autocompletion Example"). This `README` assumes knowledge of ElasticSearch. If you don't have it, follow that guide, and you'll know everything you need to be ElasticSearch-competent in 20 minutes.
 
 Once you have ElasticSearch up and running, and an index and type to use for autocompletion, you can hook it into your web app.
 
@@ -62,7 +62,7 @@ If you followed the You Complete Me guide correctly, ElasticSearch will respond 
 }
 ```
 
-The default implementation of React Complete Me requires your ElasticSearch endpoint to return *ONLY* the array of `<your_type_here>.options`. You need to have some bridge between ElasticSearch and ReactCompleteMe that returns this data. Additionally, ReactCompleteMe only sends a querystring `?q=user+search+string+here` to this endpoint. You need to take that string, hit ElasticSearch, and return *ONLY* `<your_type_here>.options`.
+The default implementation of React Complete Me requires your ElasticSearch endpoint to return *ONLY* the array of `<your_type_here>.options`. You need to have some bridge between ElasticSearch and ReactCompleteMe that returns this data. Additionally, React Complete Me only sends a querystring `?q=user+search+string+here` to this endpoint. You need to take that string, hit ElasticSearch, and return *ONLY* `<your_type_here>.options`.
 
 Once you have this bridge on your website, and you've changed the `_ELASTICSEARCH_ENDPOINT` to match that bridge, build the React Complete Me distributable:
 
@@ -83,7 +83,7 @@ Obviously, it's easy to change this.
 Custom Features
 ---------------
 
-React Complete Me abstracts the hard part of autocompletion and allows you to easily put any fancy interface you want over top of it.
+React Complete Me abstracts the hard part of autocompletion. It's designed so that UI changes are easy.
 
 The only publicly exposed function of React Complete Me is, in this repository, in `./src/main.js`. It is `Completer.conect()` (defined in `./src/app/jsx/completer.jsx`).
 
@@ -106,7 +106,7 @@ Completer.connect = function($el, Suggestion, on_submit) {
 };
 ```
 
-The first and third parameters are self explanitory. `$el` is the DOM element into which the autocompleter will be appended. `on_submit` is a function to call when the user choses an ElasticSearch suggestion or otherwise submits the search string.
+The first and third parameters are self explanitory. `$el` is the DOM element into which the autocompleter will be appended. `on_submit` is a function to call when the user chooses an ElasticSearch suggestion or otherwise submits the search string.
 
 The second argument, `Suggestion` is an object that implements the Suggestion Interface, which--in this repository--is the default Suggestion Interface, located at `./src/app/jsx/suggestion.jsx`.
 
@@ -116,7 +116,7 @@ This interface consists of three callbacks:
 * `keep_cache` - A function which determines whether to hit ElasticSearch, or continue using the previous response.
 * `suggestion_filterer` - A function which filters the ElasticSearch suggestions while the user inputs additional characters--but before a new ElasticSearch response has been returned (that matches the current user input).
 
-And finally, the suggestion interface implments a React component: 
+And finally, the suggestion interface implements a React component: 
 
 * `Components.Suggestion` - A React component to render each individual suggestion that displays under the autocomplete searchbar.
 
@@ -125,7 +125,7 @@ That's it.
 An (im)Practical example
 ------------------------
 
-Okay, I know what you're all wanting to do is, to change the autocomplete bar to show an image of say, Titanic--the movie poster, when you autocomplete the string `ti` when searching against your movie database.
+Okay, I know what you're all wanting to do is, to change the autocomplete bar to show an image of say, Titanic--the movie poster, when autocomplete results come back for the string `ti` in your movie database app.
 
 Well, I'm not going to show you how to get Kate Winslet and Leo in your search bar, but I will show you how easy it is to display the phrase "Want a pizza?" before every suggestion.
 
