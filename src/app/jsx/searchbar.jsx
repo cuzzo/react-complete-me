@@ -51,7 +51,12 @@ var Searchbar = React.createClass({
   },
 
   submit: function(ev) {
-    var $searchbar = this.refs.searchbar.getDOMNode();
+    var $searchbar = this.refs.searchbar.getDOMNode(),
+        val = $searchbar.value;
+    this._q.set(val);
+    val = this._q.escape();
+    if (val.length === 0) return;
+
     this.props.on_submit(ev, $searchbar.value);
   },
 

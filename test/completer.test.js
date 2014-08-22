@@ -52,7 +52,7 @@ describe("Completer Integration Tests", function() {
   };
 
   describe("Control Key Integration Tests", function() {
-    it("Should submit on keyPress enter.", function() {
+    it("Should submit on keyPress enter with text", function() {
       var on_submit = sinon.stub();
           completer = connect(Suggestion, on_submit),
           $textfield = completer.refs.searchbar.getDOMNode(),
@@ -63,7 +63,6 @@ describe("Completer Integration Tests", function() {
 
       TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_ENTER});
       chai.assert.equal(on_submit.callCount, 1, "submit called once");
-      console.log(on_submit); window.x = on_submit;
       chai.assert.isTrue(
           on_submit.calledWith(sinon.match.has("keyCode", _KEY_ENTER), test_str),
           "submit called with querystring"
@@ -71,6 +70,18 @@ describe("Completer Integration Tests", function() {
 
       unmount_component(completer);
     });
+
+    it("Should not submit on keyPress enter without text", function() {
+      var on_submit = sinon.stub();
+          completer = connect(Suggestion, on_submit),
+          $textfield = completer.refs.searchbar.getDOMNode();
+
+      TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_ENTER});
+      chai.assert.equal(on_submit.callCount, 0, "submit called once");
+
+      unmount_component(completer);
+    });
+
 
     it("Should go down suggestion on keyPress down.", function() {
       Suggestion.GET = suggestion_get_ok;
