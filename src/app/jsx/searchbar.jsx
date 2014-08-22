@@ -29,10 +29,6 @@ var Searchbar = React.createClass({
   },
 
   handle_keypress: function(ev) {
-    var next_char = String.fromCharCode(ev.which),
-        $searchbar = this.refs.searchbar.getDOMNode(),
-        cursor_pos = this._textfield_watcher.get_cursor_position($searchbar);
-    this._q.insert_character(cursor_pos, next_char);
   },
 
   handle_keyup: function(ev) {
@@ -40,22 +36,18 @@ var Searchbar = React.createClass({
     this.set_q_to_current_input();
   },
 
-  go_up_suggestion: function() {
+  go_up_suggestion: function(ev) {
+    ev.preventDefault();
     var $searchbar = this.refs.searchbar.getDOMNode();
     $searchbar.value = this.props.go_up_suggestion();
-    this._textfield_watcher.set_cursor_position_end($searchbar);
   },
 
-  go_down_suggestion: function() {
+  go_down_suggestion: function(ev) {
     var $searchbar = this.refs.searchbar.getDOMNode();
     $searchbar.value = this.props.go_down_suggestion();
-    this._textfield_watcher.set_cursor_position_end($searchbar)
   },
 
-  backspace: function() {
-    var $searchbar = this.refs.searchbar.getDOMNode(),
-        cursor_pos = this._textfield_watcher.get_cursor_position($searchbar)
-    this._q.remove_character(cursor_pos - 1);
+  backspace: function(ev) {
   },
 
   submit: function(ev) {
@@ -63,10 +55,7 @@ var Searchbar = React.createClass({
     this.props.on_submit(ev, $searchbar.value);
   },
 
-  delete: function() {
-    var $searchbar = this.refs.searchbar.getDOMNode(),
-        cursor_pos = this.get_cursor_position($searchbar);
-    this._q.remove_character(cursor_pos);
+  delete: function(ev) {
   },
 
   set_q_to_current_input: function() {

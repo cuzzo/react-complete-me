@@ -67,6 +67,7 @@ var Completer = React.createClass({
             update_callback={this.update_suggestions}
             go_up_suggestion={this.go_up_sugestion}
             go_down_suggestion={this.go_down_suggestion}
+            on_submit={this.props.on_submit}
             ref="searchbar" />
         <SuggestionList.Components.SuggestionList
             suggestion_component={this.props.Suggestion.Components.Suggestion}

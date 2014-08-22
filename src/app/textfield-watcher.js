@@ -24,7 +24,7 @@ var TextfieldWatcher = function(options) {
   this.handle_keypress = function(ev) {
     var code = ev.keyCode;
     switch(code) {
-      case _KEY_UP: return options.handle_up();
+      case _KEY_UP: return options.handle_up(ev);
       case _KEY_DOWN: return options.handle_down(ev);
       case _KEY_BACKSPACE: return options.handle_backspace(ev);
       case _KEY_DELETE: return options.handle_delete(ev);
@@ -46,34 +46,7 @@ var TextfieldWatcher = function(options) {
     }
     options.handle_keyup(ev);
   };
-
-  this.get_cursor_position = function($el) {
-    if ($el.selectionStart) {
-      return $el.selectionStart;
-    }
-    else if (document.selection) {
-      $el.focus();
-
-      var r = document.selection.createRange();
-      if (r === null) {
-        return 0;
-      }
-
-      var re = $el.createTextRange(),
-          rc = re.duplicate();
-      re.moveToBookmark(r.getBookmark());
-      rc.setEndPoint("EndToStart", re);
-
-      return rc.text.length;
-    }
-    return 0;
-  };
-
-  this.set_cursor_position_end = function($el) {
-    $el.setSelectionRange($el.value.length, $el.value.length);
-  };
 };
-
 
 return TextfieldWatcher;
 
