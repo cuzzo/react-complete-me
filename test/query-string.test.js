@@ -17,6 +17,10 @@ describe("QueryString Unit Tests", function() {
       cb_stub = sinon.stub();
     });
 
+    afterEach(function() {
+      cb_stub.restore();
+    });
+
     it("Should trigger for new string.", function() {
       var q = new QueryString(cb_stub, "");
       q.set("TEST");
@@ -41,6 +45,10 @@ describe("QueryString Unit Tests", function() {
 
     beforeEach(function() {
       cb_stub = sinon.stub();
+    });
+
+    afterEach(function() {
+      cb_stub.restore();
     });
 
     it("Should be same for empty query string.", function() {
