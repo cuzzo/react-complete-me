@@ -30,11 +30,11 @@ var Completer = React.createClass({
   update_suggestions: function(q) {
     this.refs.suggestion_list.set_filter(q);
 
-    /*var cached_resp = this._suggestion_cache.lookup(q);
+    var cached_resp = this._suggestion_cache.lookup(q);
     if (cached_resp !== undefined) {
       this.refs.suggestion_list.set_suggestions(cached_resp);
       return;
-    }*/
+    }
 
     if (this.props.Suggestion.keep_cache(q, this.get_cache_state())) return;
     this.request_suggestions(q);

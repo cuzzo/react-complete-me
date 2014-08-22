@@ -209,7 +209,7 @@ describe("Completer Integration Tests", function() {
       Suggestion.GET = suggestion_get_one_ok;
       sinon.stub(Suggestion, "keep_cache").returns(false);
 
-      // Reject all suggestions.
+      // Reject no suggestions.
       sinon.stub(Suggestion, "suggestion_filterer").returns(true);
 
       var on_submit = sinon.stub();
