@@ -55,10 +55,19 @@ describe("Completer Integration Tests", function() {
     it("Should submit on keyPress enter.", function() {
       var on_submit = sinon.stub();
           completer = connect(Suggestion, on_submit),
-          $textfield = completer.refs.searchbar.getDOMNode();
+          $textfield = completer.refs.searchbar.getDOMNode(),
+          test_str = "ABC";
+
+      // Set input value (so there's something to submit).
+      $textfield.value = test_str;
 
       TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_ENTER});
-      chai.assert.equal(on_submit.callCount, 1);
+      chai.assert.equal(on_submit.callCount, 1, "submit called once");
+      console.log(on_submit); window.x = on_submit;
+      chai.assert.isTrue(
+          on_submit.calledWith(sinon.match.has("keyCode", _KEY_ENTER), test_str),
+          "submit called with querystring"
+        );
 
       unmount_component(completer);
     });
