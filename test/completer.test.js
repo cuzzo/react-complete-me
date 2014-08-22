@@ -32,18 +32,19 @@ describe("Completer Integration Tests", function() {
     React.unmountComponentAtNode(component.getDOMNode().parent);
   };
 
-  var suggestion_get_ok = function(escaped_q, cb) {
-    cb(null, [
+  var THREE_RESP = [
         {text: "AB", score: 1, payload: {}},
         {text: "AC", score: 2, payload: {}},
         {text: "BC", score: 1, payload: {}}
-      ]);
+      ],
+      ONE_RESP = [THREE_RESP[0]];
+
+  var suggestion_get_ok = function(escaped_q, cb) {
+    cb(null, THREE_RESP);
   };
 
   var suggestion_get_one_ok = function(escaped_q, cb) {
-    cb(null, [
-        {text: "AB", score: 1, payload: {}}
-      ]);
+    cb(null, ONE_RESP);
   };
 
   var suggestion_get_fail = function(escaped_q, cb) {
@@ -235,6 +236,72 @@ describe("Completer Integration Tests", function() {
       chai.assert.isFalse($select.classList.contains("hidden"));
       chai.assert.isTrue($select.classList.contains("autosuggest-selected"));
       chai.assert.equal($select.selectedIndex, 0);
+
+      unmount_component(completer);
+      Suggestion.keep_cache.restore();
+      Suggestion.suggestion_filterer.restore();
+    });
+
+    it("Should render cache if exists, regardless of keep_cache.", function() {
+      Suggestion.GET = suggestion_get_one_ok;
+      sinon.stub(Suggestion, "keep_cache").returns(false);
+
+      // Reject no suggestions.
+      sinon.stub(Suggestion, "suggestion_filterer").returns(true);
+
+      var on_submit = sinon.stub();
+          completer = connect(Suggestion, on_submit),
+          textfield = completer.refs.searchbar,
+          $textfield = textfield.getDOMNode(),
+          suggestion_list = completer.refs.suggestion_list,
+          selectbox = suggestion_list.refs.selectbox,
+          $selectbox = selectbox.getDOMNode(),
+          _KEY_A = 65;
+
+      // cache always responds with THREE_RESP.
+      sinon.stub(completer._suggestion_cache, "lookup").returns(THREE_RESP);
+
+      $textfield.value = "A";
+      TestUtils.Simulate.keyUp($textfield, {which: _KEY_A});
+
+      // Did not get to keep_cache.
+      chai.assert.equal(Suggestion.keep_cache.callCount, 0, "keep_cache not called");
+
+      var $options = TestUtils.scryRenderedDOMComponentsWithTag(selectbox, "option");
+      chai.assert.equal($options.length, 3, "Has three options");
+
+      unmount_component(completer);
+      Suggestion.keep_cache.restore();
+      Suggestion.suggestion_filterer.restore();
+    });
+
+    it("Should not request if no cache and keep_cache is true.", function() {
+      Suggestion.GET = suggestion_get_ok;
+      sinon.stub(Suggestion, "keep_cache").returns(true);
+
+      // Reject no suggestions.
+      sinon.stub(Suggestion, "suggestion_filterer").returns(true);
+
+      var on_submit = sinon.stub();
+          completer = connect(Suggestion, on_submit),
+          textfield = completer.refs.searchbar,
+          $textfield = textfield.getDOMNode(),
+          suggestion_list = completer.refs.suggestion_list,
+          selectbox = suggestion_list.refs.selectbox,
+          $selectbox = selectbox.getDOMNode(),
+          _KEY_A = 65;
+
+      // cache always responds with nothing.
+      sinon.stub(completer._suggestion_cache, "lookup").returns(undefined);
+
+      $textfield.value = "A";
+      TestUtils.Simulate.keyUp($textfield, {which: _KEY_A});
+
+      // Did not get to keep_cache.
+      chai.assert.equal(Suggestion.keep_cache.callCount, 1, "keep_cache called");
+
+      var $options = TestUtils.scryRenderedDOMComponentsWithTag(selectbox, "option");
+      chai.assert.equal($options.length, 0, "has no options");
 
       unmount_component(completer);
       Suggestion.keep_cache.restore();

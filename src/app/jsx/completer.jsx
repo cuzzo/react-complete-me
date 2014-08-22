@@ -10,8 +10,13 @@ define([
  * The controller object for ReactCompleteMe auto-completion.
  */
 var Completer = React.createClass({
-  _suggestion_cache: new SuggestionCache(),
+  _suggestion_cache: null,
   _keyups_since_cache: 0,
+
+  getInitialState: function() {
+    this._suggestion_cache = new SuggestionCache();
+    return {};
+  },
 
   cache: function(q, suggestions) {
     this._suggestion_cache.add(q, suggestions);
