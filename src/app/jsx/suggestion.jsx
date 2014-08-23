@@ -95,11 +95,16 @@ Suggestion.GET = function(q, cb) {
  *   text -> ElasticSearch autocomplete response text.
  *   score -> ElasticSearch autocomplete response score.
  *   payload -> ElasticSearch autocomplete response payload.
+ *   set_suggestion -> callback: set the searchbar to this suggestion.
  */
 Suggestion.Components.Suggestion = React.createClass({
   render: function() {
     return (
-      <option name={this.props.name}>{this.props.text}</option>
+      <option
+          name={this.props.name}
+          onClick={this.props.set_suggestion}>
+        {this.props.text}
+      </option>
     );
   }
 });

@@ -24,7 +24,7 @@ var Completer = React.createClass({
   },
 
   get_cache_state: function() {
-    var count = this.refs.suggestion_list.get_filtered_suggestions().length;
+    var count = this.refs.suggestion_list.get_filtered_suggestions();
     return {
       miliseconds_elapsed: new Date() - this._suggestion_cache.last_cache(),
       keyups_since_cache: this._keyups_since_cache,
@@ -65,6 +65,13 @@ var Completer = React.createClass({
     return $suggestion_list.get_suggested_text();
   },
 
+  set_suggestion: function(ev, text) {
+    ev.preventDefault();
+    var $searchbar = this.refs.searchbar.getDOMNode();
+    $searchbar.value = text;
+    this.refs.searchbar.submit(ev);
+  },
+
   render: function() {
     return (
       <div className="autosuggest">
@@ -78,6 +85,7 @@ var Completer = React.createClass({
             suggestion_component={this.props.Suggestion.Components.Suggestion}
             suggestion_filterer={this.props.Suggestion.suggestion_filterer}
             suggestions_fetch={this.props.Suggestion.GET}
+            set_suggestion={this.set_suggestion}
             ref="suggestion_list" />
       </div>
     );

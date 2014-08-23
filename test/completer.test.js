@@ -87,7 +87,6 @@ describe("Completer Integration Tests", function() {
       unmount_component(completer);
     });
 
-
     it("Should go down suggestion on keyPress down.", function() {
       Suggestion.GET = suggestion_get_ok;
       Suggestion.keep_cache = sinon.stub().returns(false);
@@ -127,6 +126,32 @@ describe("Completer Integration Tests", function() {
       $selectbox.selectedIndex = 1;
 
       TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_UP});
+      chai.assert.equal(completer.refs.suggestion_list.get_suggested_text(), "AB");
+
+      unmount_component(completer);
+      Suggestion.keep_cache.restore();
+    });
+
+    it("Should set suggestion and submit upon click", function() {
+      Suggestion.GET = suggestion_get_ok;
+      sinon.stub(Suggestion, "keep_cache").returns(false);
+
+      var on_submit = sinon.stub(),
+          completer = connect(Suggestion, on_submit),
+          textfield = completer.refs.searchbar,
+          $textfield = textfield.getDOMNode(),
+          suggestion_list = completer.refs.suggestion_list,
+          selectbox = suggestion_list.refs.selectbox,
+          $selectbox = selectbox.getDOMNode(),
+          test_str = "A",
+          len = 1;
+
+      // Set the selection to the end of the string.
+      completer.update_suggestions(test_str);
+
+      var options = TestUtils.scryRenderedDOMComponentsWithTag(selectbox, "option");
+      TestUtils.Simulate.click(options[0]);
+
       chai.assert.equal(completer.refs.suggestion_list.get_suggested_text(), "AB");
 
       unmount_component(completer);

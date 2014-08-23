@@ -11,10 +11,12 @@ var SuggestionList = {
  * The dropdown list of suggestions of the ReactCompleteMe auto-completer.
  */
 SuggestionList.Components.SuggestionList = React.createClass({
+  _filter: "", // synonymous with query string
+  _suggestions: [],
+
   getInitialState: function() {
     return {
-      suggestions: [],
-      filter: "" // synonymous with query string.
+      filtered_suggestions: [],
     };
   },
 
@@ -27,11 +29,13 @@ SuggestionList.Components.SuggestionList = React.createClass({
   },
 
   set_filter: function(filter) {
-    this.setState({filter: filter});
+    this._filter = filter;
+    this.filter_suggestions();
   },
 
   set_suggestions: function(suggestions) {
-    this.setState({suggestions: suggestions});
+    this._suggestions = suggestions;
+    this.filter_suggestions();
   },
 
   _set_selection_rel: function(rel_index) {
@@ -42,8 +46,8 @@ SuggestionList.Components.SuggestionList = React.createClass({
     if (new_index > options - 1) {
       new_index = options - 1;
     }
-    else if (new_index < 0) {
-      new_index = 0;
+    else if (new_index < -1) {
+      new_index = -1;
     }
 
     // Use state?
@@ -61,26 +65,22 @@ SuggestionList.Components.SuggestionList = React.createClass({
     return class_name;
   },
 
-  get_selected_option: function() {
-    var $selectbox = this.refs.selectbox.getDOMNode();
-    return $selectbox.getElementsByTagName("option")[$selectbox.selectedIndex];
-  },
-
   get_suggested_text: function() {
-    var $option = this.get_selected_option();
-    return typeof $option === "undefined" ? "" : $option.value;
+    var select_id = this.refs.selectbox.getDOMNode().selectedIndex;
+    if (select_id === -1) return "";
+    if (select_id >= this.state.filtered_suggestions.length) return "";
+    return this.state.filtered_suggestions[select_id].text;
   },
 
-  /**
-   * TODO: cache this so that suggestions are not filtered twice per render.
-   * Once to check for cache, and once in render...
-   * Suggestions should only change when set_filter() is called.
-   * Set something there, check here.
-   */
-  get_filtered_suggestions: function() {
-    return this.state.suggestions.filter(function(suggestion) {
-      return this.props.suggestion_filterer(suggestion, this.state.filter);
+  filter_suggestions: function() {
+    var filtered_suggestions = this._suggestions.filter(function(suggestion) {
+      return this.props.suggestion_filterer(suggestion, this._filter);
     }.bind(this));
+    this.setState({filtered_suggestions: filtered_suggestions});
+  },
+
+  get_filtered_suggestions: function() {
+    return this.state.filtered_suggestions.length;
   },
 
   fetch: function(escaped_q, cb) {
@@ -91,27 +91,39 @@ SuggestionList.Components.SuggestionList = React.createClass({
     }.bind(this));
   },
 
+  shouldComponentUpdate: function(next_props, next_state) {
+    return this.state.filtered_suggestions !== next_state.filtered_suggestions;
+  },
+
+  set_suggestion: function(ev, index) {
+    var $selectbox = this.refs.selectbox.getDOMNode();
+    $selectbox.selectedIndex = index;
+    this.props.set_suggestion(ev, this.get_suggested_text());
+  },
+
   render: function() {
-    var filtered_suggestions = this.get_filtered_suggestions(),
+    var filtered_suggestions = this.state.filtered_suggestions,
         selected = filtered_suggestions.length === 1,
         SuggestionComponent = this.props.suggestion_component;
 
-    var $suggestions = filtered_suggestions.map(function(suggestion) {
+    var $suggestions = filtered_suggestions.map(function(suggestion, i) {
       return (
         <SuggestionComponent
             name="suggest"
+            set_suggestion={this.set_suggestion}
             text={suggestion.text}
             score={suggestion.score}
             payload={suggestion.payload}
             selected={selected} />
       );
-    });
+    }.bind(this));
 
     return (
       <select
           className={this._get_class_name($suggestions)}
           size={$suggestions.length > 10 ? 10 : $suggestions.length}
           tabIndex="-1"
+          on_suggestion_change={this.props.set_suggestion}
           ref="selectbox">
           {$suggestions}
       </select>

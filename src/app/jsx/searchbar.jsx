@@ -38,13 +38,19 @@ var Searchbar = React.createClass({
 
   go_up_suggestion: function(ev) {
     ev.preventDefault();
-    var $searchbar = this.refs.searchbar.getDOMNode();
-    $searchbar.value = this.props.go_up_suggestion();
+    var $searchbar = this.refs.searchbar.getDOMNode(),
+        value = this.props.go_up_suggestion();
+    if (value === "") return;
+
+    $searchbar.value = value;
   },
 
   go_down_suggestion: function(ev) {
-    var $searchbar = this.refs.searchbar.getDOMNode();
-    $searchbar.value = this.props.go_down_suggestion();
+    var $searchbar = this.refs.searchbar.getDOMNode(),
+        value = this.props.go_down_suggestion();
+    if (value === "") return;
+
+    $searchbar.value = value;
   },
 
   backspace: function(ev) {
