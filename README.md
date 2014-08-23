@@ -6,7 +6,7 @@ React autocompletion powered by ElasticSearch. So easy your mom can do it.
 Usage
 -----
 
-React Complete Me is an autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage") It's built with the idea of customization in mind, and is easy to integrate.
+React Complete Me is an autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage"). It's built with the idea of customization in mind, and is easy to integrate.
 
 Why is this helpful? ElasticSearch autocompletes faster than nearly anything you've thought of. It's got built-in features for fuzzy and metaphone autocomplete. It can ignore articles. Recognize snynoyms. The list goes on...
 
