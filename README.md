@@ -87,7 +87,7 @@ React Complete Me abstracts the hard part of autocompletion. It's designed so th
 
 The only publicly exposed function of React Complete Me is, in this repository, in `./src/main.js`. It is `Completer.conect()` (defined in `./src/app/jsx/completer.jsx`).
 
-```jsx
+```javascript
 /**
  * Creates an autocompleter and connects it to the DOM.
  *
@@ -131,7 +131,7 @@ Well, I'm not going to show you how to get Kate Winslet and Leo in your search b
 
 Edit `./src/app/suggestion.jsx` and change `Suggestion.Components.Suggestion` to look something like:
 
-```jsx
+```javascript
 /**
  * The individual suggestions of the ReactCompleteMe auto-completer.
  *
