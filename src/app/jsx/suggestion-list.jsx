@@ -3,14 +3,10 @@ define([
   "react"
 ], function(React) {
 
-var SuggestionList = {
-  Components: {}
-};
-
 /**
  * The dropdown list of suggestions of the ReactCompleteMe auto-completer.
  */
-SuggestionList.Components.SuggestionList = React.createClass({
+var SuggestionList = React.createClass({
   _filter: "", // synonymous with query string
   _suggestions: [],
 
