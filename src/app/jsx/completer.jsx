@@ -81,7 +81,7 @@ var Completer = React.createClass({
             go_down_suggestion={this.go_down_suggestion}
             on_submit={this.props.on_submit}
             ref="searchbar" />
-        <SuggestionList.Components.SuggestionList
+        <SuggestionList
             suggestion_component={this.props.Suggestion.Components.Suggestion}
             suggestion_filterer={this.props.Suggestion.suggestion_filterer}
             suggestions_fetch={this.props.Suggestion.GET}
