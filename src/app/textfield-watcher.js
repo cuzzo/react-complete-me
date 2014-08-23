@@ -39,8 +39,6 @@ var TextfieldWatcher = function(options) {
     switch (ev.keyCode) {
       case _KEY_UP:
       case _KEY_DOWN:
-      case _KEY_BACKSPACE:
-      case _KEY_DELETE:
       case _KEY_ENTER:
         return;
     }

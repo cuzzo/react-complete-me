@@ -56,6 +56,9 @@ var Searchbar = React.createClass({
   backspace: function(ev) {
   },
 
+  delete: function(ev) {
+  },
+
   submit: function(ev) {
     var $searchbar = this.refs.searchbar.getDOMNode(),
         val = $searchbar.value;
@@ -64,9 +67,6 @@ var Searchbar = React.createClass({
     if (val.length === 0) return;
 
     this.props.on_submit(ev, $searchbar.value);
-  },
-
-  delete: function(ev) {
   },
 
   set_q_to_current_input: function() {
