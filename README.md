@@ -6,9 +6,9 @@ React autocompletion powered by ElasticSearch. So easy your mom can do it.
 Usage
 -----
 
-React Complete Me is an autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage") It's build with the idea of customization in mind, and is easy to integrate.
+React Complete Me is an autocompletion framework built on [Facebook's React](http://facebook.github.io/react/ "React Homepage") and powered by [ElasticSearch](http://www.elasticsearch.org/ "ElasticSearch Homepage") It's built with the idea of customization in mind, and is easy to integrate.
 
-Why is this helpful? ElasticSearch autocompletes faster than nearly anything you've thought of, and it's so easy... your mom can use it.
+Why is this helpful? ElasticSearch autocompletes faster than nearly anything you've thought of. It's got built-in features for fuzzy and metaphone autocomplete. It can ignore articles. Recognize snynoyms. The list goes on...
 
 Dependencies
 ------------
@@ -19,7 +19,7 @@ Dependencies
 Prerequisite Knowledge
 ----------------------
 
-React Complete Me gets its name from the ElasticSearch blogpost [You Complete Me](http://www.elasticsearch.org/blog/you-complete-me/ "ElasticSearch Autocompletion Example"). This `README` assumes knowledge of ElasticSearch. If you don't have it, follow that guide, and you'll know everything you need to be ElasticSearch-competent in 20 minutes.
+React Complete Me gets its name from the ElasticSearch blogpost [You Complete Me](http://www.elasticsearch.org/blog/you-complete-me/ "ElasticSearch Autocompletion Example"). This `README` assumes knowledge of ElasticSearch. If you don't have any previous experience or knowledge, follow that guide. You'll be ElasticSearch-competent in 20 minutes.
 
 Once you have ElasticSearch up and running, and an index and type to use for autocompletion, you can hook it into your web app.
 
