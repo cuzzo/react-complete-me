@@ -140,11 +140,14 @@ Edit `./src/app/suggestion.jsx` and change `Suggestion.Components.Suggestion` to
  *   text -> ElasticSearch autocomplete response text.
  *   score -> ElasticSearch autocomplete response score.
  *   payload -> ElasticSearch autocomplete response payload.
+ *   set_suggestion -> callback: set the searchbar to this suggestion.
  */
 Suggestion.Components.Suggestion = React.createClass({
   render: function() {
     return (
-      <option name={this.props.name}>
+      <option
+          name={this.props.name}
+          onClick={this.props.set_suggestion}>
         <span class="useless-information">Want a pizza?</span>
         <span class="useful-information">{this.props.text}</span>
       </option>
@@ -184,12 +187,12 @@ Suggestion.GET = function(q, cb) {
 Roadmap
 -------
 
-* v0.0.3: Remove dependency on AMD / make it easier to use CommonJS or other frameworks.
-* v0.1: Integration tests with mocha & fixing some low-hanging bugs.
-* v0.1.1: Include example node bridge app between ElasticSearch and React Complete me.
-* v0.1.2: Inlcude Dockerfile for ElasticSearch, as well as an example ElasticSearch index, to better demonstrate functionality.
-* v0.1.3: Include a live demo of the project running.
-* v0.1.4: Github pages for documentation fo the Suggestion interface / a better explanation of the suggestion interface.
+* v0.1.1: Better support for static autocompletion.
+* v0.1.2: Better example. better default CSS.
+* v0.1.3: Include example node bridge app between ElasticSearch and React Complete me.
+* v0.1.4: Github pages for documentation of the Suggestion interface / a better explanation of the suggestion interface.
+* v0.1.5: Inlcude Dockerfile for ElasticSearch, as well as an example ElasticSearch index, to better demonstrate functionality.
+* v0.1.6: Remove dependency on AMD / make it easier to use CommonJS or other frameworks.
 
 Other Resources
 ---------------
