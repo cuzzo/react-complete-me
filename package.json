@@ -1,7 +1,7 @@
 {
   "name": "react-complete-me",
   "description": "React autocompletion powered by ElasticSearch.",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "homepage": "https://github.com/cuzzo/react-complete-me",
   "dependencies": {
     "underscore": "~1.5.2"
