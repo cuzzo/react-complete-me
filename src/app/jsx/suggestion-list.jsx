@@ -16,7 +16,7 @@ SuggestionList.Components.SuggestionList = React.createClass({
 
   getInitialState: function() {
     return {
-      filtered_suggestions: [],
+      filtered_suggestions: []
     };
   },
 
@@ -30,12 +30,12 @@ SuggestionList.Components.SuggestionList = React.createClass({
 
   set_filter: function(filter) {
     this._filter = filter;
-    this.filter_suggestions();
+    this._filter_suggestions();
   },
 
   set_suggestions: function(suggestions) {
     this._suggestions = suggestions;
-    this.filter_suggestions();
+    this._filter_suggestions();
   },
 
   _set_selection_rel: function(rel_index) {
@@ -50,7 +50,6 @@ SuggestionList.Components.SuggestionList = React.createClass({
       new_index = -1;
     }
 
-    // Use state?
     $selectbox.selectedIndex = new_index;
   },
 
@@ -72,7 +71,7 @@ SuggestionList.Components.SuggestionList = React.createClass({
     return this.state.filtered_suggestions[select_id].text;
   },
 
-  filter_suggestions: function() {
+  _filter_suggestions: function() {
     var filtered_suggestions = this._suggestions.filter(function(suggestion) {
       return this.props.suggestion_filterer(suggestion, this._filter);
     }.bind(this));
