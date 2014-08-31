@@ -21,7 +21,7 @@ var _KEY_UP = 38,
 var TextfieldWatcher = function(options) {
   options = typeof options === "object" ? options : {};
 
-  this.handle_keypress = function(ev) {
+  this.handle_keydown = function(ev) {
     var code = ev.keyCode;
     switch(code) {
       case _KEY_UP: return options.handle_up(ev);
@@ -29,6 +29,18 @@ var TextfieldWatcher = function(options) {
       case _KEY_BACKSPACE: return options.handle_backspace(ev);
       case _KEY_DELETE: return options.handle_delete(ev);
       case _KEY_ENTER: return options.handle_enter(ev);
+    }
+  };
+
+  this.handle_keypress = function(ev) {
+    var code = ev.keyCode;
+    switch(code) {
+      case _KEY_UP:
+      case _KEY_DOWN:
+      case _KEY_BACKSPACE:
+      case _KEY_DELETE:
+      case _KEY_ENTER:
+        return;
     }
     if (ev.which === 0) return;
     options.handle_text(ev);

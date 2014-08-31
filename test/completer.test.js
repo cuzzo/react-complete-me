@@ -52,7 +52,7 @@ describe("Completer Integration Tests", function() {
   };
 
   describe("Control Key Integration Tests", function() {
-    it("Should submit on keyPress enter with text", function() {
+    it("Should submit on keyDown enter with text", function() {
       Suggestion.GET = suggestion_get_ok;
       Suggestion.keep_cache = sinon.stub().returns(false);
 
@@ -64,7 +64,7 @@ describe("Completer Integration Tests", function() {
       // Set input value (so there's something to submit).
       $textfield.value = test_str;
 
-      TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_ENTER});
+      TestUtils.Simulate.keyDown($textfield, {keyCode: _KEY_ENTER});
       chai.assert.equal(on_submit.callCount, 1, "submit called once");
       chai.assert.isTrue(
           on_submit.calledWith(sinon.match.has("keyCode", _KEY_ENTER), test_str),
@@ -74,20 +74,20 @@ describe("Completer Integration Tests", function() {
       unmount_component(completer);
     });
 
-    it("Should not submit on keyPress enter without text", function() {
+    it("Should not submit on keyDown enter without text", function() {
       var on_submit = sinon.stub();
           completer = connect(Suggestion, on_submit),
           $textfield = completer.refs.searchbar.getDOMNode();
 
       $textfield.value = "";
 
-      TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_ENTER});
+      TestUtils.Simulate.keyDown($textfield, {keyCode: _KEY_ENTER});
       chai.assert.equal(on_submit.callCount, 0, "submit not once");
 
       unmount_component(completer);
     });
 
-    it("Should go down suggestion on keyPress down.", function() {
+    it("Should go down suggestion on keyDown down.", function() {
       Suggestion.GET = suggestion_get_ok;
       Suggestion.keep_cache = sinon.stub().returns(false);
 
@@ -100,13 +100,13 @@ describe("Completer Integration Tests", function() {
 
       completer.update_suggestions(test_str);
 
-      TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_DOWN});
+      TestUtils.Simulate.keyDown($textfield, {keyCode: _KEY_DOWN});
       chai.assert.equal(completer.refs.suggestion_list.get_suggested_text(), "AB");
 
       unmount_component(completer);
     });
 
-    it("Should go up suggestion on keyPres up.", function() {
+    it("Should go up suggestion on keyDown up.", function() {
       Suggestion.GET = suggestion_get_ok;
       sinon.stub(Suggestion, "keep_cache").returns(false);
 
@@ -125,7 +125,7 @@ describe("Completer Integration Tests", function() {
       // Select the second item.
       $selectbox.selectedIndex = 1;
 
-      TestUtils.Simulate.keyPress($textfield, {keyCode: _KEY_UP});
+      TestUtils.Simulate.keyDown($textfield, {keyCode: _KEY_UP});
       chai.assert.equal(completer.refs.suggestion_list.get_suggested_text(), "AB");
 
       unmount_component(completer);

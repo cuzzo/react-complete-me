@@ -84,6 +84,7 @@ var Searchbar = React.createClass({
             type="textfield"
             name="q"
             className="autosuggest-searchbar"
+            onKeyDown={this._textfield_watcher.handle_keydown}
             onKeyPress={this._textfield_watcher.handle_keypress}
             onKeyUp={this._textfield_watcher.handle_keyup}
             autoComplete="off"

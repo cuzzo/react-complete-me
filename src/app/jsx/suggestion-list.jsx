@@ -105,6 +105,7 @@ var SuggestionList = React.createClass({
       return (
         <SuggestionComponent
             name="suggest"
+            key={suggestion.payload.id}
             set_suggestion={this.set_suggestion}
             text={suggestion.text}
             score={suggestion.score}
