@@ -60,11 +60,19 @@ var SuggestionList = React.createClass({
     return class_name;
   },
 
-  get_suggested_text: function() {
+  _get_current_suggestion: function() {
     var select_id = this.refs.selectbox.getDOMNode().selectedIndex;
     if (select_id === -1) return "";
     if (select_id >= this.state.filtered_suggestions.length) return "";
-    return this.state.filtered_suggestions[select_id].text;
+    return this.state.filtered_suggestions[select_id];
+  },
+
+  get_suggested_text: function() {
+   return this._get_current_suggestion().text;
+  },
+
+  get_suggested_payload: function() {
+    return this._get_current_suggestion().payload;
   },
 
   _filter_suggestions: function() {
@@ -93,7 +101,15 @@ var SuggestionList = React.createClass({
   set_suggestion: function(ev, index) {
     var $selectbox = this.refs.selectbox.getDOMNode();
     $selectbox.selectedIndex = index;
-    this.props.set_suggestion(ev, this.get_suggested_text());
+    this.props.set_suggestion(ev, this.get_suggested_payload());
+  },
+
+  should_suggest: function(q) {
+    return this.get_suggested_text() === q;
+  },
+
+  clear: function() {
+    this.setState({filtered_suggestions: []});
   },
 
   render: function() {

@@ -20,7 +20,7 @@ var Searchbar = React.createClass({
       handle_down: this.go_down_suggestion,
       handle_backspace: this.backspace,
       handle_delete: this.delete,
-      handle_enter: this.submit,
+      handle_enter: this.enter,
       handle_text: this.handle_keypress,
       handle_keyup: this.handle_keyup
     });
@@ -59,6 +59,12 @@ var Searchbar = React.createClass({
   delete: function(ev) {
   },
 
+  enter: function(ev) {
+    var suggested = this.props.do_autosuggest(ev);
+    if (suggested) return;
+    this.submit(ev);
+  },
+
   submit: function(ev) {
     var $searchbar = this.refs.searchbar.getDOMNode(),
         val = $searchbar.value;
@@ -67,6 +73,7 @@ var Searchbar = React.createClass({
     if (val.length === 0) return;
 
     this.props.on_submit(ev, $searchbar.value);
+    this.props.clear();
   },
 
   set_q_to_current_input: function() {
@@ -76,6 +83,14 @@ var Searchbar = React.createClass({
 
   get_escaped_q: function() {
     return this._q.escape();
+  },
+
+  get_q: function() {
+    return this.refs.searchbar.getDOMNode().value;
+  },
+
+  clear: function() {
+    this.refs.searchbar.getDOMNode().value = "";
   },
 
   render: function() {

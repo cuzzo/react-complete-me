@@ -22,9 +22,13 @@ describe("Completer Integration Tests", function() {
     });
   });
 
-  var connect = function(Sug, on_sub) {
+  var connect = function(Sug, on_sub, on_suggest) {
     return TestUtils.renderIntoDocument(
-        Completer({Suggestion: Sug, on_submit: on_sub})
+        Completer({
+          Suggestion: Sug,
+          on_submit: on_sub,
+          on_suggest: on_suggest
+        })
       );
   };
 
@@ -33,9 +37,9 @@ describe("Completer Integration Tests", function() {
   };
 
   var THREE_RESP = [
-        {text: "AB", score: 1, payload: {}},
-        {text: "AC", score: 2, payload: {}},
-        {text: "BC", score: 1, payload: {}}
+        {text: "AB", score: 1, payload: {id: "x"}},
+        {text: "AC", score: 2, payload: {id: "y"}},
+        {text: "BC", score: 1, payload: {id: "z"}}
       ],
       ONE_RESP = [THREE_RESP[0]];
 
@@ -137,7 +141,8 @@ describe("Completer Integration Tests", function() {
       sinon.stub(Suggestion, "keep_cache").returns(false);
 
       var on_submit = sinon.stub(),
-          completer = connect(Suggestion, on_submit),
+          on_suggest = sinon.stub(),
+          completer = connect(Suggestion, on_submit, on_suggest),
           textfield = completer.refs.searchbar,
           $textfield = textfield.getDOMNode(),
           suggestion_list = completer.refs.suggestion_list,
@@ -152,7 +157,9 @@ describe("Completer Integration Tests", function() {
       var options = TestUtils.scryRenderedDOMComponentsWithTag(selectbox, "option");
       TestUtils.Simulate.click(options[0]);
 
-      chai.assert.equal(completer.refs.suggestion_list.get_suggested_text(), "AB");
+      chai.assert.isTrue(
+          on_suggest.calledWith(sinon.match.any, THREE_RESP[0].payload)
+        );
 
       unmount_component(completer);
       Suggestion.keep_cache.restore();

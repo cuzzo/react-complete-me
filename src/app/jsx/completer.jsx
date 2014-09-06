@@ -65,11 +65,32 @@ var Completer = React.createClass({
     return $suggestion_list.get_suggested_text();
   },
 
-  set_suggestion: function(ev, text) {
+  set_suggestion: function(ev, payload) {
     ev.preventDefault();
-    var $searchbar = this.refs.searchbar.getDOMNode();
-    $searchbar.value = text;
-    this.refs.searchbar.submit(ev);
+    this.props.on_suggest(ev, payload);
+  },
+
+  /**
+   * Determines whether or not to route the user directly to a suggestion.
+   *
+   * @param object ev
+   *   A DOM event.
+   *
+   * @return bool
+   *   Whether or not a suggestion was made.
+   */
+  do_autosuggest: function(ev) {
+    var $suggestion_list = this.refs.suggestion_list,
+        $searchbar = this.refs.searchbar;
+    if (!$suggestion_list.should_suggest($searchbar.get_q())) return false;
+    this.set_suggestion(ev, $suggestion_list.get_suggested_payload());
+    this.clear();
+    return true;
+  },
+
+  clear: function() {
+    this.refs.searchbar.clear();
+    this.refs.suggestion_list.clear();
   },
 
   render: function() {
@@ -80,6 +101,8 @@ var Completer = React.createClass({
             go_up_suggestion={this.go_up_sugestion}
             go_down_suggestion={this.go_down_suggestion}
             on_submit={this.props.on_submit}
+            do_autosuggest={this.do_autosuggest}
+            clear={this.clear}
             ref="searchbar" />
         <SuggestionList
             suggestion_component={this.props.Suggestion.Components.Suggestion}
@@ -101,10 +124,15 @@ var Completer = React.createClass({
  *   An object implementing the Suggestion interface.
  * @param function on_submit
  *   A submit callback.
+ * @param function on_suggest
+ *   Callback to trigger when suggestion is clicked or chosen.
  */
-Completer.connect = function($el, Suggestion, on_submit) {
+Completer.connect = function($el, Suggestion, on_submit, on_suggest) {
   React.renderComponent(
-    <Completer Suggestion={Suggestion} on_submit={on_submit} />,
+    <Completer
+        Suggestion={Suggestion}
+        on_submit={on_submit}
+        on_suggest={on_suggest} />,
     $el
   );
 };
