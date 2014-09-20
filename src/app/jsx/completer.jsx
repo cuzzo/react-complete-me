@@ -108,7 +108,7 @@ var Completer = React.createClass({
             suggestion_component={this.props.Suggestion.Components.Suggestion}
             suggestion_filterer={this.props.Suggestion.suggestion_filterer}
             suggestions_fetch={this.props.Suggestion.GET}
-            set_suggestion={this.set_suggestion}
+            do_autosuggest={this.do_autosuggest}
             ref="suggestion_list" />
       </div>
     );

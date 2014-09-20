@@ -101,7 +101,7 @@ var SuggestionList = React.createClass({
   set_suggestion: function(ev, index) {
     var $selectbox = this.refs.selectbox.getDOMNode();
     $selectbox.selectedIndex = index;
-    this.props.set_suggestion(ev, this.get_suggested_payload());
+    this.props.do_autosuggest(ev);
   },
 
   should_suggest: function(q) {
