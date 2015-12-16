@@ -1,4 +1,4 @@
-React Complete Me
+React Complete Me [![Build Status](https://travis-ci.org/cuzzo/react-complete-me.svg)](https://travis-ci.org/cuzzo/react-complete-me)
 =================
 
 React autocompletion powered by ElasticSearch. So easy your mom can do it.
